@@ -18,7 +18,9 @@ model User {
   address        String
   email          String          @unique
   password       String
-  biography      String?
+  // biography      String?
+  createdAt      DateTime        @default(now()) @db.Timestamptz()
+  updatedAt      DateTime        @updatedAt @db.Timestamptz()
   buyerReviews   Review[]        @relation("BuyerReviews")
   sellerReviews  Review[]        @relation("SellerReviews")
   images         User_image[]
@@ -31,11 +33,13 @@ model User {
 }
 
 model User_image {
-  image_id         String  @id @default(uuid())
+  image_id         String   @id @default(uuid())
   profile_image    String?
   background_image String?
-  User             User    @relation(fields: [user_id], references: [user_id])
+  User             User     @relation(fields: [user_id], references: [user_id])
   user_id          String
+  createdAt        DateTime @default(now()) @db.Timestamptz()
+  updatedAt        DateTime @updatedAt @db.Timestamptz()
 }
 
 model Category {
@@ -46,6 +50,8 @@ model Category {
   parent      Category?  @relation("CategoryToCategory", fields: [parent_id], references: [category_id])
   children    Category[] @relation("CategoryToCategory")
   products    Product[]
+  createdAt   DateTime   @default(now()) @db.Timestamptz()
+  updatedAt   DateTime   @updatedAt @db.Timestamptz()
 }
 
 model Product {
@@ -66,15 +72,19 @@ model Product {
   bid               Bid[]
   likes             Product_liked[]
   chatRoom          Chat_room[]
+  createdAt         DateTime        @default(now()) @db.Timestamptz()
+  updatedAt         DateTime        @updatedAt @db.Timestamptz()
 }
 
 model Product_image {
-  image_id   String  @id @default(uuid())
+  image_id   String   @id @default(uuid())
   image_1    String
   image_2    String?
   image_3    String?
-  product    Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
+  product    Product  @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
   product_id String
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+  updatedAt  DateTime @updatedAt @db.Timestamptz()
 }
 
 model Product_liked {
@@ -84,6 +94,8 @@ model Product_liked {
   user       User     @relation(fields: [user_id], references: [user_id])
   user_id    String
   liked_date DateTime @default(now())
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+  updatedAt  DateTime @updatedAt @db.Timestamptz()
 }
 
 model Review {
@@ -94,6 +106,8 @@ model Review {
   buyer      User     @relation("BuyerReviews", fields: [buyerId], references: [user_id])
   seller     User     @relation("SellerReviews", fields: [sellerId], references: [user_id])
   reviewTime DateTime @default(now())
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+  updatedAt  DateTime @updatedAt @db.Timestamptz()
 }
 
 //입찰내역
@@ -105,6 +119,8 @@ model Bid {
   product_id String
   bidPrice   Int
   bidTime    DateTime @default(now())
+  createdAt  DateTime @default(now()) @db.Timestamptz()
+  updatedAt  DateTime @updatedAt @db.Timestamptz()
 }
 
 model Chat_room {
@@ -117,6 +133,8 @@ model Chat_room {
   product      Product        @relation(fields: [product_id], references: [product_id])
   seller       User           @relation("seller", fields: [seller_id], references: [user_id])
   chatMessages Chat_message[]
+  createdAt    DateTime       @default(now()) @db.Timestamptz()
+  updatedAt    DateTime       @updatedAt @db.Timestamptz()
 }
 
 model Chat_message {
@@ -127,6 +145,8 @@ model Chat_message {
   chat       Chat_room @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
   content    String
   sendTime   DateTime  @default(now())
+  createdAt  DateTime  @default(now()) @db.Timestamptz()
+  updatedAt  DateTime  @updatedAt @db.Timestamptz()
 }
 
 enum Status {
