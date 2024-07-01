@@ -12,13 +12,14 @@ generator erd {
 }
 
 model User {
-  user_id        String          @id @default(uuid())
+  id             String          @id @default(uuid())
   name           String
-  phone_number   Int             @unique
+  phoneNumber    String          @unique
   address        String
+  addressDetail  String
   email          String          @unique
   password       String
-  // biography      String?
+  biography      String?
   createdAt      DateTime        @default(now()) @db.Timestamptz()
   updatedAt      DateTime        @updatedAt @db.Timestamptz()
   buyerReviews   Review[]        @relation("BuyerReviews")
@@ -33,78 +34,78 @@ model User {
 }
 
 model User_image {
-  image_id         String   @id @default(uuid())
-  profile_image    String?
-  background_image String?
-  User             User     @relation(fields: [user_id], references: [user_id])
-  user_id          String
-  createdAt        DateTime @default(now()) @db.Timestamptz()
-  updatedAt        DateTime @updatedAt @db.Timestamptz()
+  id              String   @id @default(uuid())
+  profileImage    String?
+  backgroundImage String?
+  User            User     @relation(fields: [userId], references: [id])
+  userId          String
+  createdAt       DateTime @default(now()) @db.Timestamptz()
+  updatedAt       DateTime @updatedAt @db.Timestamptz()
 }
 
 model Category {
-  category_id String     @id @default(uuid())
-  name        String
-  parent_id   String?    @map("parent_id")
-  depth       Int
-  parent      Category?  @relation("CategoryToCategory", fields: [parent_id], references: [category_id])
-  children    Category[] @relation("CategoryToCategory")
-  products    Product[]
-  createdAt   DateTime   @default(now()) @db.Timestamptz()
-  updatedAt   DateTime   @updatedAt @db.Timestamptz()
+  id        String     @id @default(uuid())
+  name      String
+  parentId  String?    @map("parent_id")
+  depth     Int
+  parent    Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToCategory")
+  products  Product[]
+  createdAt DateTime   @default(now()) @db.Timestamptz()
+  updatedAt DateTime   @updatedAt @db.Timestamptz()
 }
 
 model Product {
-  product_id        String          @id @default(uuid())
-  seller            User            @relation(fields: [seller_id], references: [user_id])
-  seller_id         String
-  title             String
-  description       String
-  registration_date DateTime        @default(now())
-  end_date          String
-  start_price       Int
-  reserve_price     Int?
-  hammer_price      Int?
-  category          Category        @relation(fields: [category_id], references: [category_id])
-  category_id       String
-  status            Status          @default(auctionProgress)
-  images            Product_image[]
-  bid               Bid[]
-  likes             Product_liked[]
-  chatRoom          Chat_room[]
-  createdAt         DateTime        @default(now()) @db.Timestamptz()
-  updatedAt         DateTime        @updatedAt @db.Timestamptz()
+  id               String          @id @default(uuid())
+  seller           User            @relation(fields: [sellerId], references: [id])
+  sellerId         String
+  title            String
+  description      String
+  registrationDate DateTime        @default(now())
+  end_date         String
+  startPrice       Int
+  reservePrice     Int?
+  hammerPrice      Int?
+  category         Category        @relation(fields: [categoryId], references: [id])
+  categoryId       String
+  status           Status          @default(auctionProgress)
+  images           Product_image[]
+  bid              Bid[]
+  likes            Product_liked[]
+  chatRoom         Chat_room[]
+  createdAt        DateTime        @default(now()) @db.Timestamptz()
+  updatedAt        DateTime        @updatedAt @db.Timestamptz()
 }
 
 model Product_image {
-  image_id   String   @id @default(uuid())
-  image_1    String
-  image_2    String?
-  image_3    String?
-  product    Product  @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
-  product_id String
-  createdAt  DateTime @default(now()) @db.Timestamptz()
-  updatedAt  DateTime @updatedAt @db.Timestamptz()
+  id        String   @id @default(uuid())
+  image_1   String
+  image_2   String?
+  image_3   String?
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model Product_liked {
   id         String   @id @default(uuid())
-  product    Product  @relation(fields: [product_id], references: [product_id])
-  product_id String
-  user       User     @relation(fields: [user_id], references: [user_id])
-  user_id    String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
   liked_date DateTime @default(now())
   createdAt  DateTime @default(now()) @db.Timestamptz()
   updatedAt  DateTime @updatedAt @db.Timestamptz()
 }
 
 model Review {
-  review_id  String   @id @default(uuid())
+  id         String   @id @default(uuid())
   coment     String
   buyerId    String
   sellerId   String
-  buyer      User     @relation("BuyerReviews", fields: [buyerId], references: [user_id])
-  seller     User     @relation("SellerReviews", fields: [sellerId], references: [user_id])
+  buyer      User     @relation("BuyerReviews", fields: [buyerId], references: [id])
+  seller     User     @relation("SellerReviews", fields: [sellerId], references: [id])
   reviewTime DateTime @default(now())
   createdAt  DateTime @default(now()) @db.Timestamptz()
   updatedAt  DateTime @updatedAt @db.Timestamptz()
@@ -112,41 +113,41 @@ model Review {
 
 //입찰내역
 model Bid {
-  bid_id     String   @id @default(uuid())
-  user       User     @relation(fields: [user_id], references: [user_id])
-  user_id    String
-  product    Product  @relation(fields: [product_id], references: [product_id])
-  product_id String
-  bidPrice   Int
-  bidTime    DateTime @default(now())
-  createdAt  DateTime @default(now()) @db.Timestamptz()
-  updatedAt  DateTime @updatedAt @db.Timestamptz()
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  bidPrice  Int
+  bidTime   DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model Chat_room {
-  chat_id      String         @id @default(uuid())
-  buyer_id     String
-  seller_id    String
-  product_id   String
+  id           String         @id @default(uuid())
+  buyerId      String
+  sellerId     String
+  productId    String
   chatTime     DateTime       @default(now())
-  buyer        User           @relation("buyer", fields: [buyer_id], references: [user_id])
-  product      Product        @relation(fields: [product_id], references: [product_id])
-  seller       User           @relation("seller", fields: [seller_id], references: [user_id])
+  buyer        User           @relation("buyer", fields: [buyerId], references: [id])
+  product      Product        @relation(fields: [productId], references: [id])
+  seller       User           @relation("seller", fields: [sellerId], references: [id])
   chatMessages Chat_message[]
   createdAt    DateTime       @default(now()) @db.Timestamptz()
   updatedAt    DateTime       @updatedAt @db.Timestamptz()
 }
 
 model Chat_message {
-  message_id String    @id @default(uuid())
-  user       User      @relation(fields: [user_id], references: [user_id])
-  user_id    String
-  chat_id    String
-  chat       Chat_room @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
-  content    String
-  sendTime   DateTime  @default(now())
-  createdAt  DateTime  @default(now()) @db.Timestamptz()
-  updatedAt  DateTime  @updatedAt @db.Timestamptz()
+  id        String    @id @default(uuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  chatId    String
+  chat      Chat_room @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  content   String
+  sendTime  DateTime  @default(now())
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+  updatedAt DateTime  @updatedAt @db.Timestamptz()
 }
 
 enum Status {

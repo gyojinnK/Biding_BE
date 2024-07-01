@@ -15,7 +15,7 @@ export class AuthService {
     const user = await this.usersService.getByEmail(loginDto.email);
     if (user) {
       const payload = {
-        id: user.user_id,
+        id: user.id,
         email: user.email,
       };
 
@@ -29,7 +29,7 @@ export class AuthService {
       }
 
       return {
-        access_token: this.jwtService.sign(payload),
+        accessToken: this.jwtService.sign(payload),
         user: user,
       };
     }

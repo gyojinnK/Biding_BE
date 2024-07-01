@@ -16,7 +16,7 @@ export class UsersService {
   async getById(id: string): Promise<GetUserOutputDto> {
     const user = this.prismaService.user.findUnique({
       where: {
-        user_id: id,
+        id,
       },
     });
 

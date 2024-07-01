@@ -1,10 +1,11 @@
 import { User } from '@prisma/client';
 
 export class UserEntity implements User {
-  user_id: string;
+  id: string;
   name: string;
-  phone_number: number;
+  phoneNumber: string;
   address: string;
+  addressDetail: string;
   email: string;
   password: string;
   biography: string;

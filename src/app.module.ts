@@ -8,9 +8,14 @@ import { ProductsModule } from './products/products.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { PrismaModule } from './Prisma/prisma.module';
 import { ChatsModule } from './chats/chats.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'],
+    }),
     AuthModule,
     UsersModule,
     CategoriesModule,
