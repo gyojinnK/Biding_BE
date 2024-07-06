@@ -18,6 +18,9 @@ export class UsersService {
       where: {
         id,
       },
+      include: {
+        images: true,
+      },
     });
 
     if (!user) throw new NotFoundException('User not found.');

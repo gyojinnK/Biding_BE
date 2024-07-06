@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserInputDto } from './dtos/user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateUserInputDto, GetUserOutputDto } from './dtos/user.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthUser } from 'src/auth/decorators/auth-user.decorator';
 
 @ApiTags('User')
 @Controller('users')
@@ -14,8 +16,10 @@ export class UsersController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string) {
-    return this.usersService.getById(id);
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
+  async getById(@AuthUser() user: GetUserOutputDto) {
+    return this.usersService.getById(user.id);
   }
 
   @Get(':email')
