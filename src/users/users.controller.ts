@@ -15,10 +15,10 @@ export class UsersController {
     return this.usersService.create(data);
   }
 
-  @Get(':id')
+  @Get('me')
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
-  async getById(@AuthUser() user: GetUserOutputDto) {
+  async getById(@AuthUser() user: GetUserOutputDto): Promise<GetUserOutputDto> {
     return this.usersService.getById(user.id);
   }
 
